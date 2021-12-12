@@ -27,3 +27,12 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email address.')
+
+class VokaPracticeForm(FlaskForm):
+    answer = StringField('answer', validators=[DataRequired()])
+    submit = SubmitField('check')
+
+class VokaAddForm(FlaskForm):
+    text = StringField('text', validators=[DataRequired()])
+    translation = StringField('translation', validators=[DataRequired()])
+    submit = SubmitField('add')

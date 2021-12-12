@@ -1,9 +1,16 @@
 from app import app, db
 from app.models import User
-from app.forms import LoginForm, RegistrationForm
+from app.forms import LoginForm, RegistrationForm, VokaPracticeForm, VokaAddForm
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
+from datetime import datetime
+
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.utcnow()
+        db.session.commit()
 
 @app.route('/')
 @app.route('/index')
@@ -48,3 +55,32 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+@app.route('/user/<username>')
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = [
+        {'author': user, 'body': 'Test post #1'},
+        {'author': user, 'body': 'Test post #2'}
+    ]
+    return render_template('user.html', user=user, posts=posts)
+
+@app.route('/vocabulary')
+@login_required
+def vocabulary():
+    return render_template('vocabular.html', title="Vocabulary")
+
+@app.route('/vocabulary_practice', methods=['GET', 'POST'])
+@login_required
+def voca_pract():
+    form = VokaPracticeForm()
+
+    return render_template('voca_pract.html', title="Practice", form=form)
+
+@app.route('/vocabulary_add', methods=['GET', 'POST'])
+@login_required
+def voca_add():
+    form = VokaAddForm()
+
+    return render_template('voca_add.html', title="Practice", form=form)
