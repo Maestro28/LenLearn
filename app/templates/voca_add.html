@@ -32,9 +32,14 @@
     {% for t in translations %}
         <table>
         <tr>
-            <td>{{t.text}}</td><td> = </td><td>{{t.translate}}</td>
-            <td><hr></td>
+            <td>{{t.text}}</td>
+            <td> = </td>
+            <td>{{t.translate}}</td>
+            <td><a href="{{ url_for('del_word',
+                                    word_id=t.id) }}">delete</a>
+            </td>
         </tr>
         </table>
+        <hr>
     {% endfor %}
 {% endblock %}

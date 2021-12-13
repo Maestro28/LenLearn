@@ -112,3 +112,11 @@ def edit_profile():
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', title='Edit Profile',
                            form=form)
+
+@app.route('/del_word/<word_id>')
+@login_required
+def del_word(word_id):
+    v = Vocabular.query.get(word_id)
+    db.session.delete(v)
+    db.session.commit()
+    return redirect(url_for('voca_add'))
