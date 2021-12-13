@@ -10,7 +10,7 @@
 <body>
     <div>LenLearn:
         <a href="{{ url_for('index') }}">Home</a>
-        <a href="{{ url_for('vocabulary') }}">Vocabulary</a>
+        <a href="{{ url_for('voca_add') }}">Vocabulary</a>
         <a href="{{ url_for('login') }}">Blog</a>
         <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
         {% if current_user.is_anonymous %}

@@ -1,3 +1,5 @@
+import random
+
 from app import app, db
 from app.models import User, Vocabular
 from app.forms import LoginForm, RegistrationForm, VokaPracticeForm, VokaAddForm, EditProfileForm
@@ -66,20 +68,16 @@ def user(username):
     ]
     return render_template('user.html', user=user, posts=posts)
 
-@app.route('/vocabulary')
-@login_required
-def vocabulary():
-    return render_template('vocabular.html', title="Vocabulary")
-
 @app.route('/vocabulary_practice', methods=['GET', 'POST'])
 @login_required
 def voca_pract():
     translation = current_user.translations.order_by(Vocabular.last_check).first()
+    g_set = ["Nice", "Exactly", "Good job", "Correct"]
     form = VokaPracticeForm()
     if form.validate_on_submit():
         translation.last_check = datetime.utcnow()
         db.session.commit()
-        flash('greetings set')
+        flash(g_set[random.randint(0, 3)])
         return redirect(url_for('voca_pract'))
     return render_template('voca_pract.html', title="Practice", form=form, translation=translation)
 

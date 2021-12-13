@@ -35,7 +35,7 @@ class VokaPracticeForm(FlaskForm):
 
     def validate_answer(self, answer):
         t = current_user.translations.order_by(Vocabular.last_check).first().text
-        if t != answer.data:
+        if t != answer.data.strip():
             raise ValidationError('Please try again')
 
 class VokaAddForm(FlaskForm):
