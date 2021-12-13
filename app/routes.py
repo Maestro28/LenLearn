@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import User
+from app.models import User, Vocabular
 from app.forms import LoginForm, RegistrationForm, VokaPracticeForm, VokaAddForm
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
@@ -74,13 +74,25 @@ def vocabulary():
 @app.route('/vocabulary_practice', methods=['GET', 'POST'])
 @login_required
 def voca_pract():
+    translation = current_user.translations.order_by(Vocabular.last_check).first()
     form = VokaPracticeForm()
-
-    return render_template('voca_pract.html', title="Practice", form=form)
+    if form.validate_on_submit():
+        translation.last_check = datetime.utcnow()
+        db.session.commit()
+        flash('greetings set')
+        return redirect(url_for('voca_pract'))
+    return render_template('voca_pract.html', title="Practice", form=form, translation=translation)
 
 @app.route('/vocabulary_add', methods=['GET', 'POST'])
 @login_required
 def voca_add():
     form = VokaAddForm()
-
-    return render_template('voca_add.html', title="Practice", form=form)
+    translations = current_user.translations.all()
+    if form.validate_on_submit():
+        v = Vocabular(text=form.text.data, translate=form.translation.data,
+                      owner=current_user)
+        db.session.add(v)
+        db.session.commit()
+        flash('One more word added')
+        return redirect(url_for('voca_add'))
+    return render_template('voca_add.html', title="Add", form=form, translations=translations)

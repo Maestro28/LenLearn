@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Vokabulary Practice</h1>
+    <h1>Vokabulary add</h1>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <table>
@@ -27,4 +27,14 @@
             </tr>
         </table>
     </form>
+
+
+    {% for t in translations %}
+        <table>
+        <tr>
+            <td>{{t.text}}</td><td> = </td><td>{{t.translate}}</td>
+            <td><hr></td>
+        </tr>
+        </table>
+    {% endfor %}
 {% endblock %}

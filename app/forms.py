@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, RadioField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
-from app.models import User
+from app.models import User, Vocabular
+from flask_login import current_user
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -31,6 +32,11 @@ class RegistrationForm(FlaskForm):
 class VokaPracticeForm(FlaskForm):
     answer = StringField('answer', validators=[DataRequired()])
     submit = SubmitField('check')
+
+    def validate_answer(self, answer):
+        t = current_user.translations.order_by(Vocabular.last_check).first().text
+        if t != answer.data:
+            raise ValidationError('Please try again')
 
 class VokaAddForm(FlaskForm):
     text = StringField('text', validators=[DataRequired()])

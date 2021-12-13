@@ -49,9 +49,8 @@ class Vocabular(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(140))
     translate = db.Column(db.String(140))
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    last_check = db.Column(db.DateTime, default=datetime.utcnow)
+    last_check = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def __repr__(self):
         return '<Tranlation: {}={}>'.format(self.text, self.translate)
