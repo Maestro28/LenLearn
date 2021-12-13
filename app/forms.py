@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, RadioField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, RadioField, TextAreaField
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
 from app.models import User, Vocabular
 from flask_login import current_user
 
@@ -42,3 +42,8 @@ class VokaAddForm(FlaskForm):
     text = StringField('text', validators=[DataRequired()])
     translation = StringField('translation', validators=[DataRequired()])
     submit = SubmitField('add')
+
+class EditProfileForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    about_me = TextAreaField('Tell your learning language reason', validators=[Length(min=0, max=140)])
+    submit = SubmitField('Submit')
