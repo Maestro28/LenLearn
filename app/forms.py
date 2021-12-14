@@ -47,3 +47,9 @@ class EditProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     about_me = TextAreaField('Tell your learning language reason', validators=[Length(min=0, max=140)])
     submit = SubmitField('Submit')
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data, ).first()
+        if username.data != current_user.username:
+            if user is not None:
+                raise ValidationError('Please use a different username.')
