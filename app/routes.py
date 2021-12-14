@@ -1,12 +1,12 @@
-import random
-
 from app import app, db
-from app.models import User, Vocabular
-from app.forms import LoginForm, RegistrationForm, VokaPracticeForm, VokaAddForm, EditProfileForm
+from app.models import User, Vocabular, Post
+from app.forms import LoginForm, RegistrationForm, VokaPracticeForm,\
+    VokaAddForm, EditProfileForm, PostForm
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from datetime import datetime
+import random
 
 @app.before_request
 def before_request():
@@ -62,10 +62,7 @@ def register():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    posts = [
-        {'author': user, 'body': 'Test post #1'},
-        {'author': user, 'body': 'Test post #2'}
-    ]
+    posts = user.posts
     return render_template('user.html', user=user, posts=posts)
 
 @app.route('/vocabulary_practice', methods=['GET', 'POST'])
@@ -118,3 +115,17 @@ def del_word(word_id):
     db.session.delete(v)
     db.session.commit()
     return redirect(url_for('voca_add'))
+
+@app.route('/blog', methods=['GET', 'POST'])
+@login_required
+def blog():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body=form.post.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post is now live!')
+        return redirect(url_for('blog'))
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template("blog.html", title='blog', form=form,
+                           posts=posts)
