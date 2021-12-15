@@ -42,5 +42,11 @@
         </table>
         <hr>
     {% endfor %}
+    {% if prev_url %}
+    <a href="{{ prev_url }}">Newer words</a>
+    {% endif %}
+    {% if next_url %}
+    <a href="{{ next_url }}">Older words</a>
+    {% endif %}
 <h3><a href="{{ url_for('voca_pract') }}">Lets practice</a></h3>
 {% endblock %}
