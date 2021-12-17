@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
-{% block content %}
+{% block app_content %}
     <h1>Vokabulary add</h1>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
@@ -28,25 +29,40 @@
         </table>
     </form>
 
+<!--
+    {% if form %}
+    {{ wtf.quick_form(form, form_type="inline") }}
+    <br>
+    {% endif %}-->
 
+    <table class="table table-bordered">
     {% for t in translations %}
-        <table>
         <tr>
             <td>{{t.text}}</td>
             <td> = </td>
             <td>{{t.translate}}</td>
             <td><a href="{{ url_for('del_word',
-                                    word_id=t.id) }}">delete</a>
+                                    word_id=t.id) }}"> delete </a>
             </td>
         </tr>
-        </table>
-        <hr>
     {% endfor %}
-    {% if prev_url %}
-    <a href="{{ prev_url }}">Newer words</a>
-    {% endif %}
-    {% if next_url %}
-    <a href="{{ next_url }}">Older words</a>
-    {% endif %}
+    </table>
+    <hr>
+
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not prev_url %} disabled{% endif %}">
+                <a href="{{ prev_url or '#' }}">
+                    <span aria-hidden="true">&larr;</span> Newer words
+                </a>
+            </li>
+            <li class="next{% if not next_url %} disabled{% endif %}">
+                <a href="{{ next_url or '#' }}">
+                    Older words <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
 <h3><a href="{{ url_for('voca_pract') }}">Lets practice</a></h3>
 {% endblock %}

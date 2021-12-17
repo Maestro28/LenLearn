@@ -1,19 +1,18 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block app_content %}
     <h1>Vokabulary Practice</h1>
-    <form action="" method="post" novalidate>
+    <form action="" method="post" novalidate class="form-horizontal" >
         {{ form.hidden_tag() }}
         <table>
             <tr>
-                <td>{{translation.translate}} =</td>
+                <td><h3>{{translation.translate}} = </h3></td>
                 <td>{{ form.answer(size=32) }}</td>
                 {% for error in form.answer.errors %}
-                <span style="color: red;">[{{ error }}]</span>
+                <span style="color: red;">{{ error }}</span>
                 {% endfor %}
                 <td>{{ form.submit() }}</td>
             </tr>
         </table>
     </form>
-    <p>{{translation.text}} (It is visible only in developing mode)</p>
 {% endblock %}
