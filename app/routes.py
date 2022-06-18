@@ -96,6 +96,7 @@ def voca_add():
         db.session.commit()
         flash('One more word added')
         return redirect(url_for('voca_add'))
+    count = len(current_user.translations.all())
     #translations = current_user.translations.all()
     page = request.args.get('page', 1, type=int)
     translations = current_user.translations.paginate(
@@ -105,7 +106,7 @@ def voca_add():
     prev_url = url_for('voca_add', page=translations.prev_num) \
         if translations.has_prev else None
     return render_template('voca_add.html', title="Add", form=form, translations=translations.items,
-                           next_url=next_url, prev_url=prev_url)
+                           next_url=next_url, prev_url=prev_url, count=count)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -141,7 +142,7 @@ def blog():
         db.session.commit()
         flash('Your post is now live!')
         return redirect(url_for('blog'))
-    #posts = Post.query.order_by(Post.timestamp.desc()).all()
+    # posts = Post.query.order_by(Post.timestamp.desc()).all()
     page = request.args.get('page', 1, type=int)
     posts = Post.query.order_by(Post.timestamp.desc()).paginate(
         page, app.config['POSTS_PER_PAGE'], False)
