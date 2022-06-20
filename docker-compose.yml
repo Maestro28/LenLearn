@@ -1,13 +1,30 @@
 version: '3.8'
 
 services:
+  db:
+#    platform: linux/amd64
+    env_file:
+      - .env
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    ports:
+      - 5405:5432
+    restart: always
+    environment:
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
   web:
+#    platform: linux/amd64
     build: .
 #    command: python manage.py run -h 0.0.0.0
-    command: flask run --host=0.0.0.0
+    command: sh -c "flask db upgrade && flask run --host=0.0.0.0"
     volumes:
       - ./:/base/
     ports:
       - 5000:5000
     env_file:
-      - ./.env.dev
+      - ./.env
+    depends_on:
+      - db
